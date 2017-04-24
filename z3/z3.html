@@ -74,8 +74,8 @@ $(function () {
     camera.lookAt(new THREE.Vector3(0, 0, 0)); //10,0,0
 
     // add subtle ambient lighting
-   // var ambientLight = new THREE.AmbientLight(0x0c0c0c);
-   // scene.add(ambientLight);
+    var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    scene.add(ambientLight);
 
     // add spotlight for the shadows
     var spotLight = new THREE.SpotLight(0xffffff);
@@ -107,6 +107,7 @@ $(function () {
         stats.update();
 
         cube.rotation.y = step += 0.01;
+        //cube.rotation.y = 20;
 
         // render using requestAnimationFrame
         requestAnimationFrame(render);

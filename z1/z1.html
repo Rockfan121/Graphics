@@ -5,10 +5,10 @@
 
 <head>
     <title>Flat and Gouraud Shaning - podejscie 2.</title>
-    <script type="text/javascript" src="three.js"></script>
-    <script type="text/javascript" src="jquery-1.9.0.js"></script>
-    <script type="text/javascript" src="stats.js"></script>
-    <script type="text/javascript" src="dat.gui.js"></script>
+    <script type="text/javascript" src="../three.js"></script>
+    <script type="text/javascript" src="../jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="../stats.js"></script>
+    <script type="text/javascript" src="../dat.gui.js"></script>
     <style>
         body {
             /* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -70,8 +70,8 @@ $(function () {
     camera.lookAt(new THREE.Vector3(10, 0, 0));
 
     // add subtle ambient lighting
-    var ambientLight = new THREE.AmbientLight(0x0c0c0c);
-    scene.add(ambientLight);
+    //var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+    //scene.add(ambientLight);
 
     // add spotlight for the shadows
     var spotLight = new THREE.SpotLight(0xffffff);
