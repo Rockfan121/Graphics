@@ -4,7 +4,7 @@
 <html>
 
 <head>
-    <title>Spotlight with Lambert Reflectance</title>
+    <title>PointLight and DirectionalLight</title>
     <script type="text/javascript" src="../three.js"></script>
     <script type="text/javascript" src="../jquery-1.9.0.js"></script>
     <script type="text/javascript" src="../stats.js"></script>
@@ -91,24 +91,18 @@ $(function () {
    // scene.add(ambientLight);
 
     // add spotlight for the shadows
-    var spotLight = new THREE.SpotLight(0xffffff);
     var pointLight = new THREE.PointLight(0xaaffaa);
     var dirLight = new THREE.DirectionalLight(0xffffff);
 
     var myTarget = new THREE.Object3D();
     myTarget.position.set(4,-0.6, 0);
-    spotLight.target = myTarget;
-    spotLight.position.set(0, -0.6, 15); //-40, 60, -10
-    spotLight.exponent = 10;
-    spotLight.angle = Math.PI/10;
-    spotLight.castShadow = true; //true
 
     //pointLight.intensity = 1; //default
     pointLight.distance = 100;
     pointLight.position.set(0,15, 15);
 
-    dirLight.target = myTarget;
-    dirLight.position.set(0, -0.6, 15);
+    dirLight.target = plane;
+    dirLight.position.set(0, 5, 5);
 
     dirLight.castShadow = true;
     dirLight.shadowCameraNear = 2;
@@ -123,14 +117,13 @@ $(function () {
     dirLight.shadowMapHeight = 1024;
     dirLight.shadowMapWidth = 1024;
 
-     console.log("SpotLight: " + spotLight.angle +" " + spotLight.color.getHex() + " " +spotLight.distance + " " + spotLight.exponent);
-    //scene.add(spotLight);
+
 
      console.log("PointLight: " + pointLight.intensity +" " + pointLight.color.getHex() + " " +pointLight.distance);
      scene.add(pointLight);
 
      console.log("DirectionalLight: " + dirLight.intensity +" " + dirLight.color.getHex() + " " +dirLight.target);
-     //scene.add(dirLight);
+     scene.add(dirLight);
 
 
     // add the output of the renderer to the html element
@@ -140,38 +133,12 @@ $(function () {
     var step = 0;
     var oldContext = null;
 
-    var controls = new function () {
-        this.light = "point";
-    }
-
-    var gui = new dat.GUI();
-    var spGui = gui.addFolder("Mesh");
-
-    spGui.add(controls, 'light', ["point", "spot", "directional"]).onChange(function(e) {
-        scene.remove(pointLight);
-        scene.remove(spotLight);
-        scene.remove(dirLight);
-        switch(e) {
-            case "point":
-                scene.add(pointLight)
-                ///console.log(meshMaterial);
-                break;
-            case "spot":
-                scene.add(spotLight)
-                //console.log(lambertMaterial);
-                break;
-            case "directional":
-            	scene.add(dirLight);
-            	break;
-        }
-        
-    });
+    
 
     render();
 
     function render() {
         stats.update();
-
         cube.rotation.y = step += 0.01;
 
         // render using requestAnimationFrame
@@ -180,11 +147,8 @@ $(function () {
     }
 
     function initStats() {
-
         var stats = new Stats();
-
         stats.setMode(0); // 0: fps, 1: ms
-
 
         // Align top-left
         stats.domElement.style.position = 'absolute';
@@ -192,7 +156,6 @@ $(function () {
         stats.domElement.style.top = '0px';
 
         $("#Stats-output").append(stats.domElement);
-
         return stats;
     }
 });
