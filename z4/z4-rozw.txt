@@ -1,0 +1,28 @@
+Parametry oświetlenia:
+
+  Punkt docelowy:
+    myTarget.position.set(3,0.9, 0); (A)
+  Punkt, w którym jest źródło światła:
+    spotLight.position.set(0, 0.7, 10);  (B)
+  Jak szybko bedzie malala intensywność światła:
+    spotLight.exponent = 10; (e)
+  Kąt theta ("zakres", jaki obejmuje światło):
+    spotLight.angle = Math.PI/10;
+  Kąt alfa (kat "odchylenia" punktu P od wektora patrzenia światła):
+    nieznay
+
+Wybrany punkt: (0.5, 0.5, 1.0) = P
+Jego kolor: 0x7777ff (fioletowy) -> (119, 119, 255) -> (0.467, 0.467, 1.0) (poznormalizowaniu)
+
+Licze ze wzoru:
+  I = I_o * cos(alfa) ^ e (jeśli alfa < theta)
+  I = 0 (w przeciwnym wypadku)
+
+Rzeczywisty kolor punktu: C = c * I
+Aby go otrzymać, rozważe trójkąt A'BP, gdzie A' = (3,0.9, 1) (dwa pierwsze określają wiążą sie bezpośrednio z położeniem światła, z=1 jest płaszczyzną, w której leży przednia ściana kostki)
+Kąt alfa to kąt A'BP.
+
+cos(alfa) = |BA'| / |PB| 
+
+
+

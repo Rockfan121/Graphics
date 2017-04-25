@@ -80,9 +80,9 @@ $(function () {
     var spotLight = new THREE.SpotLight(0xffffff);
 
     var myTarget = new THREE.Object3D();
-    myTarget.position.set(4,-0.6, 0);
+    myTarget.position.set(3,0.9, 0);
     spotLight.target = myTarget;
-    spotLight.position.set(0, -0.6, 15); //-40, 60, -10
+    spotLight.position.set(0, 0.7, 10); //-40, 60, -10
     spotLight.exponent = 10;
     spotLight.angle = Math.PI/10;
     spotLight.castShadow = false; //true
