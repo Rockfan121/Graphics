@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Zadanie</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1">
+  <style type="text/css">
+             body {
+                 /* Set the background color of the HTML page to black */
+                 background-color: #FFFFFF;
+ 
+                 /* Hide oversized content. This prevents the scroll bars. */
+                 overflow: hidden;
+             }
+  </style>
+         
+  
+</head>
+<body>
+
+    <script type="text/javascript" src="../three.js"></script>
+    <script type="text/javascript" src="../jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="../stats.js"></script>
+    <script type="text/javascript" src="../dat.gui.js"></script>
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+
+<script>
+
+var scene, camera, renderer, container, cube;
+
+init()
+animate()
+
+function initMaterial(path){
+  var texture = THREE.ImageUtils.loadTexture(path);
+  var material = new THREE.MeshBasicMaterial({
+    map: texture,
+    overdraw: 0.5
+  });
+  return material;
+}
+
+function init(){
+  // create scene
+  scene = new THREE.Scene();
+  
+  // set camera
+  var SCREEN_WIDTH = window.innerWidth;
+  var SCREEN_HEIGHT = window.innerHeight;
+  var VIEW_ANGLE = 45;
+  var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT
+  var NEAR = 2;
+  var FAR = 4000;
+  camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+  scene.add(camera);
+  camera.position.set(0, 150, 300);
+  camera.lookAt(scene.position);
+  
+  
+    renderer = new THREE.WebGLRenderer({antialias:true});
+
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  container = document.getElementById('ThreeJS');
+  container.appendChild(renderer.domElement);
+
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.zIndex = 100;
+  container.appendChild(stats.domElement);
+  
+  // add light
+  var light = new THREE.PointLight(0xFFFFFF);
+  light.position.set(0, 250, 0);
+  scene.add(light);
+
+
+  var materials = [
+  initMaterial("img/bricks.jpg"), //right
+  initMaterial("img/clouds.jpg"), //left
+  initMaterial("img/crate.jpg"), //top
+  initMaterial("img/stone-wall.jpg"),//bottom
+  initMaterial("img/water.jpg"), //front
+  initMaterial("img/wood-floor.jpg")];//back
+
+
+    var material = new THREE.MeshFaceMaterial(materials);
+    cube = new THREE.Mesh(new THREE.CubeGeometry(
+      2000, 2000, 2000, 1, 1, 1, null, true), material);
+    cube.scale.set(-1,1,1);
+    scene.add(cube);
+  gui = new dat.GUI();
+  
+  if(!Array.prototype.last){
+    Array.prototype.last = function(){
+      return this[this.length - 1];
+    }
+  }
+  
+}
+function animate(){
+  requestAnimationFrame(animate);
+  render();
+  update();
+}
+
+function render() {
+  cube.rotation.y += 0.05;
+  renderer.render( scene, camera );
+}
+
+function update(){
+  //controls.update();
+  stats.update();
+    
+}
+
+</script>
+</body>
+</html>
