@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Zadanie</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1">
+  <style type="text/css">
+             body {
+                 /* Set the background color of the HTML page to black */
+                 background-color: #000000;
+ 
+                 /* Hide oversized content. This prevents the scroll bars. */
+                 overflow: hidden;
+             }
+  </style>
+         
+  
+</head>
+<body>
+
+    <script type="text/javascript" src="../three.js"></script>
+    <script type="text/javascript" src="../jquery-1.9.0.js"></script>
+    <script type="text/javascript" src="../stats.js"></script>
+    <script type="text/javascript" src="../dat.gui.js"></script>
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+
+<script>
+
+var scene, camera, renderer, container, cube;
+
+init();
+animate();
+function init(){
+  scene = new THREE.Scene();
+  var SCREEN_WIDTH = window.innerWidth;
+  var SCREEN_HEIGHT = window.innerHeight;
+  var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
+    camera = new THREE.PerspectiveCamera(45, ASPECT, 2, 500);
+  scene.add(camera);
+  camera.position.set(0, 250, 200);
+  camera.lookAt(scene.position);
+ 
+var curve = new THREE.EllipseCurve(
+  0,  0,            // ax, aY
+  100, 100,           // xRadius, yRadius
+  0,  2 * Math.PI,  // aStartAngle, aEndAngle
+  false,            // aClockwise
+  0                 // aRotation
+);
+
+var path = new THREE.Path( curve.getPoints( 50 ) );
+var geometry = path.createPointsGeometry( 50 );
+var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+
+// Create the final object to add to the scene
+var ellipse = new THREE.Line( geometry, material );
+scene.add(ellipse);
+
+var light = new THREE.PointLight(0xFFFFFF);
+  light.position.set(0, 250, 0);
+  scene.add(light);
+
+
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+ 
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+    
+}
+
+function animate() {
+        requestAnimationFrame( animate );
+
+        renderer.render( scene, camera );
+      }
+
+</script>
+</body>
+</html>

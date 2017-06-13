@@ -1,7 +1,7 @@
 <html>
 
 <head>
-<title>Zadanie 2</title>
+<title>Zadanie 7</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <script src="../libs/jquery-1.9.1/jquery-1.9.1.js"></script>
 <script src="../libs/gl-matrix/gl-matrix.js"></script>
@@ -17,7 +17,7 @@
       try 
       {
           gl = canvas.getContext("experimental-webgl");
-          gl.bindTexture(gl.TEXTURE_2D, map);
+          //gl.bindTexture(gl.TEXTURE_2D, map);
 
       } 
       catch (e)
@@ -245,10 +245,11 @@
     var okToRun = false;
     
     function handleTextureLoaded(gl, texture) {
-      var levelOfDetail = 3;
+      var levelOfDetail = 256; //musza to byc wielokrotnosci 2
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         gl.texImage2D(gl.TEXTURE_2D, levelOfDetail, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
 gl.generateMipmap(gl.TEXTURE_2D);
 

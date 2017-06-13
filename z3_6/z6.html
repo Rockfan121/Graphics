@@ -6,6 +6,7 @@
 <script src="../libs/jquery-1.9.1/jquery-1.9.1.js"></script>
 <script src="../libs/gl-matrix/gl-matrix.js"></script>
 <script src="../libs/requestAnimationFrame/RequestAnimationFrame.js"></script>
+<script src="DDS.js"></script>
 <script type="text/javascript">
 
 
@@ -17,7 +18,7 @@
       try 
       {
           gl = canvas.getContext("experimental-webgl");
-          gl.bindTexture(gl.TEXTURE_2D, map);
+          //gl.bindTexture(gl.TEXTURE_2D, map);
 
       } 
       catch (e)
@@ -244,12 +245,17 @@
 
     var okToRun = false;
     
-    function handleTextureLoaded(gl, texture) {
+    /*function handleTextureLoaded(gl, texture) {
         var ext = gl.getExtension('WEBGL_compressed_texture_s3tc');
 
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
         //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        var data = new Uint8Array([r, g, b, a]);
+        var levelSize = textureLevelSize(internalFormat, width, height);
+        var dxtLevel = new Uint8Array(data.buffer, data.byteOffset, levelSize);
+        gl.compressedTexImage2D(gl.TEXTURE_2D, i, internalFormat, width, height, 0, dxtLevel);
+
         gl.compressedTexImage2D(gl.TEXTURE_2D, 0, ext.COMPRESSED_RGB_S3TC_DXT1_EXT, 512, 512, 0, texture.image);
   //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -259,8 +265,8 @@
   gl.generateMipmap(gl.TEXTURE_2D);
   gl.bindTexture(gl.TEXTURE_2D, null);
         okToRun = true;
-    }
-    
+    }*/
+   /* 
     var webGLTexture;
 
     function initTexture(gl) {
@@ -271,7 +277,7 @@
         }
 
       webGLTexture.image.src = "../images/wooden_crate_texture_by_zackseeker-d38ddsb.png";
-    }
+    }*/
 
     
     function draw(gl, obj) {
@@ -295,7 +301,7 @@
         gl.uniformMatrix4fv(shaderModelViewMatrixUniform, false, modelViewMatrix);
 
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, webGLTexture);
+        //gl.bindTexture(gl.TEXTURE_2D, webGLTexture); 
         gl.uniform1i(shaderSamplerUniform, 0);
 
         // rysuje obiekt
@@ -313,6 +319,20 @@
           mat4.rotate(modelViewMatrix, modelViewMatrix, angle, rotationAxis);
         }
     }
+
+     function textureLevelSize(format, width, height) {
+    switch (format) {
+      case COMPRESSED_RGB_S3TC_DXT1_EXT:
+        return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+
+      case COMPRESSED_RGBA_S3TC_DXT3_EXT:
+      case COMPRESSED_RGBA_S3TC_DXT5_EXT:
+        return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
+
+      default:
+        return 0;
+    }
+}
           
   $(document).ready(
       function() {
@@ -322,8 +342,16 @@
             initMatrices(canvas);
             var cube = createCube(gl);
             initShader(gl);
-            initTexture(gl);
-            run(gl, cube);
+
+            var src = "../images/wooden_crate_texture_by_zackseeker-d38ddsb.png";
+        var ext = (
+              gl.getExtension('WEBGL_compressed_texture_s3tc') ||
+              gl.getExtension('MOZ_WEBGL_compressed_texture_s3tc') ||
+              gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc')
+            );
+            //initTexture(gl);
+            //run(gl, cube);
+          loadDDSTextureAndRun(gl, ext, src, cube);
       }
   );
 

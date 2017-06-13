@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Zadanie</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1">
+  <style type="text/css">
+             body {
+                 /* Set the background color of the HTML page to black */
+                 background-color: #FFFFFF;
+ 
+                 /* Hide oversized content. This prevents the scroll bars. */
+                 overflow: hidden;
+             }
+  </style>
+         
+  
+</head>
+<body>
+
+    <script type="text/javascript" src="../three2.js"></script>
+    <script src="js/libs/stats.min.js"></script>
+    <script src="js/libs/dat.gui.min.js"></script>
+
+    <script src="js/shaders/CopyShader.js"></script>
+
+    <script src="js/postprocessing/EffectComposer.js"></script>
+    <script src="js/postprocessing/SSAARenderPass.js"></script>
+    <script src="js/postprocessing/RenderPass.js"></script>
+    <script src="js/postprocessing/MaskPass.js"></script>
+    <script src="js/postprocessing/ShaderPass.js"></script>
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+
+<script>
+
+var scene, camera, renderer, container, cube;
+
+init()
+animate()
+
+function initMaterial(path){
+  var texture = THREE.ImageUtils.loadTexture(path);
+  var material = new THREE.MeshBasicMaterial({
+    map: texture,
+    overdraw: 0.5
+  });
+  return material;
+}
+
+function init(){
+  // create scene
+  scene = new THREE.Scene();
+  
+  // set camera
+  var SCREEN_WIDTH = window.innerWidth;
+  var SCREEN_HEIGHT = window.innerHeight;
+  var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT
+  camera = new THREE.PerspectiveCamera(45, ASPECT, 2, 500);
+  scene.add(camera);
+  camera.position.set(0, 250, 200);
+  camera.lookAt(scene.position);
+  
+  
+    renderer = new THREE.WebGLRenderer({antialias:false});
+
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  container = document.getElementById('ThreeJS');
+  container.appendChild(renderer.domElement);
+
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.bottom = '0px';
+  stats.domElement.style.zIndex = 100;
+  container.appendChild(stats.domElement);
+  
+  // add light
+  var light = new THREE.PointLight(0xFFFFFF);
+  light.position.set(0, 250, 0);
+  scene.add(light);
+
+
+  var materials = [
+  initMaterial("img/IMGP5443.jpg"), //right
+  initMaterial("img/IMGP5442.jpg"), //left
+  initMaterial("img/IMGP5441.jpg"), //top
+  initMaterial("img/IMGP5443.jpg"),//bottom
+  initMaterial("img/IMGP5442.jpg"), //front
+  initMaterial("img/IMGP5441.jpg")];//back
+
+
+
+    var material = new THREE.MeshFaceMaterial(materials);
+    cube = new THREE.Mesh(new THREE.CubeGeometry(
+      100, 100, 100, 1, 1, 1, null, true), material);
+    
+    scene.add(cube);
+
+// postprocessing
+    var composer = new THREE.EffectComposer( renderer );
+    var ssaaPass = new THREE.SSAARenderPass( scene, camera );
+    ssaaPass.unbiased = false;
+    composer.addPass( ssaaPass );
+    var shadePass = new THREE.ShaderPass( THREE.CopyShader );
+    shadePass.renderToScreen = true;
+    composer.addPass( shadePass );
+  
+  if(!Array.prototype.last){
+    Array.prototype.last = function(){
+      return this[this.length - 1];
+    }
+  }
+  
+}
+function animate(){
+  requestAnimationFrame(animate);
+  render();
+  update();
+}
+
+function render() {
+  cube.rotation.y += 0.05;
+  cube.rotation.x += 0.03;
+  renderer.render( scene, camera );
+}
+
+function update(){
+  //controls.update();
+  stats.update();
+    
+}
+
+</script>
+</body>
+</html>
